@@ -7,4 +7,5 @@ User = get_user_model()
 class Note(models.Model):
     title = models.CharField(max_length=500)
     archive_date = models.DateField(null=True)
-    user = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE)
+    share = models.ManyToManyField(User)
