@@ -6,13 +6,13 @@ from .models import Note
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
 
     class Meta:
         model = Note
-        fields = "__all__"
+        exclude = ["share"]
 
     def validate(self, attrs):
-        attrs["user"] = self.context["request"].user
+        attrs["author"] = self.context["request"].user
 
         return attrs
