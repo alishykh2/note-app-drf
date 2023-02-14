@@ -1,7 +1,6 @@
-from django.urls import path, include
-from .views import NoteViewSet
-
 from rest_framework import routers
+
+from .views import NoteViewSet
 
 router = routers.SimpleRouter()
 router.register(r"note", NoteViewSet)
