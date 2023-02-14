@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"email\" : \"ali@test.com\",\n\"password\" : \"AliAhmad123!\"\n\n}",
+							"raw": "{\n\"email\" : \"ali8@test.com\",\n\"password\" : \"AliAhmad123!\"\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,7 +55,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"email\" : \"ali@test.com\",\n\"password\" : \"AliAhmad123!\"\n\n}",
+							"raw": "{\n\"refresh\" : \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3NzU4NTI3NSwiaWF0IjoxNjc2Mjg5Mjc1LCJqdGkiOiIzZmFkYzEwMTk1ZGM0ODgxYWQ1NTVmNDlhZDQ0M2Y0MSIsInVzZXJfaWQiOjF9.zIznyrJNCJWUZSDvv-uGNZhN02y_kwJpoMmN4waEUZM\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -63,11 +63,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}token/",
+							"raw": "{{url}}auth/token/refresh/",
 							"host": [
-								"{{url}}token"
+								"{{url}}auth"
 							],
 							"path": [
+								"token",
+								"refresh",
 								""
 							]
 						},
@@ -88,7 +90,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n    \"first_name\": \"Ali\",\n    \"last_name\": \"Ahmad\",\n    \"email\": \"ali8@test.com\",\n    \"password\": \"AliAhmad123!\",\n    \"password_confirmation\": \"AliAhmad123!\"\n}",
+							"raw": "{ \n    \"first_name\": \"Ali\",\n    \"last_name\": \"Ahmad\",\n    \"email\": \"ali@test.com\",\n    \"password\": \"AliAhmad123!\",\n    \"password_confirmation\": \"AliAhmad123!\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -124,7 +126,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3NzU4Mzk3NywiaWF0IjoxNjc2Mjg3OTc3LCJqdGkiOiJjMmEyZjFjOTBlNWE0MGI3OTk5ODVlNTYxYWRmZTY4NyIsInVzZXJfaWQiOjF9.UvWAYIbZDoY9jB2h1izgqncg5zRYJzCRpCEt12QuOsY",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -153,11 +155,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}note?search=",
+							"raw": "{{url}}note?type=&search=",
 							"host": [
 								"{{url}}note"
 							],
 							"query": [
+								{
+									"key": "type",
+									"value": ""
+								},
 								{
 									"key": "search",
 									"value": ""
@@ -175,7 +181,14 @@
 					},
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
 						"header": [
@@ -187,7 +200,8 @@
 							{
 								"key": "Authorization",
 								"value": "Token {{token}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -200,12 +214,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}note/1",
+							"raw": "{{url}}note/5",
 							"host": [
 								"{{url}}note"
 							],
 							"path": [
-								"1"
+								"5"
 							]
 						},
 						"description": "Get the single note detail"
@@ -216,7 +230,14 @@
 					"name": "create",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [
@@ -234,7 +255,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"text\" : \"note3\",\n\"archive_date\" : null\n}",
+							"raw": "{\n\"title\" : \"user21\",\n\"archive_date\" : null\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -255,10 +276,66 @@
 					"response": []
 				},
 				{
+					"name": "share note",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"email\" : \"ali@test.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}note-share/5",
+							"host": [
+								"{{url}}note-share"
+							],
+							"path": [
+								"5"
+							]
+						},
+						"description": "Used for the creation of new note\n\nuser_id will be of the login user automatically"
+					},
+					"response": []
+				},
+				{
 					"name": "update",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "PUT",
 						"header": [
@@ -270,12 +347,13 @@
 							{
 								"key": "Authorization",
 								"value": "Token {{token}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"text\" : \"ali@test.com\",\n\"archive_date\" : null\n\n}",
+							"raw": "{\n\"title\" : \"ali@test.com\",\n\"archive_date\" : \"2023-02-13\"\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -283,12 +361,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}note/2/",
+							"raw": "{{url}}note/1/",
 							"host": [
 								"{{url}}note"
 							],
 							"path": [
-								"2",
+								"1",
 								""
 							]
 						},
