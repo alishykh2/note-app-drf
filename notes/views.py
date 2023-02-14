@@ -1,7 +1,9 @@
+import datetime
+
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
-from rest_framework import filters
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -21,14 +23,32 @@ class NoteViewSet(viewsets.ModelViewSet):
         IsAuthenticated,
     ]
     serializer_class = NoteSerializer
-    lookup_field = "pk"
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["text", "id"]
+
+    def get_queryset(self):
+        query = self.request.query_params.get("search", "")
+        type = self.request.query_params.get("type", "")
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
+
+        if type == "archive":
+            qs = Q(archive_date__lte=today)
+        else:
+            qs = Q(archive_date__gt=today) | Q(archive_date=None)
+        return Note.objects.filter(
+            Q(title__icontains=query)
+            & (Q(author=self.request.user) | Q(share=self.request.user)),
+            qs,
+        )
 
 
 class NoteShareViewSet(APIView):
     def post(self, request, pk, format=None):
         note = get_object_or_404(Note, pk=pk)
+        if note.author != request.user:
+            return Response(
+                {"message": "Permission Denied"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         user = get_object_or_404(User, email=request.data.get("email"))
         send_email(
             subject="Note Shared",

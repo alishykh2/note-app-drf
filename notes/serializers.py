@@ -14,5 +14,4 @@ class NoteSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs["author"] = self.context["request"].user
-
         return attrs
