@@ -35,7 +35,7 @@ class NoteViewSet(viewsets.ModelViewSet):
             qs = Q(archive_date__gt=today) | Q(archive_date=None)
         return Note.objects.filter(
             Q(title__icontains=query)
-            & (Q(author=self.request.user) | Q(share=self.request.user)),
+            & (Q(author=self.request.user) | Q(share_with=self.request.user)),
             qs,
         )
 
@@ -55,6 +55,6 @@ class NoteShareViewSet(APIView):
             message=request.user.email + " shared note with you ",
             email=request.data.get("email"),
         )
-        note.share.add(user.id)
+        note.share_with.add(user.id)
         note.save()
         return Response({"message": "Note Shared"}, status=status.HTTP_200_OK)

@@ -10,7 +10,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        exclude = ["share"]
+        exclude = ["share_with"]
 
     def validate(self, attrs):
         attrs["author"] = self.context["request"].user
