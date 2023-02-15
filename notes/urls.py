@@ -2,12 +2,14 @@ from django.urls import path
 
 from rest_framework import routers
 
+from .views import NoteCommentViewSet
 from .views import NoteHistoryViewSet
 from .views import NoteViewSet
 from .views import RevertNoteViewSet
 
 router = routers.SimpleRouter()
 router.register(r"note", NoteViewSet)
+router.register(r"note-comment", NoteCommentViewSet)
 
 
 urlpatterns = [

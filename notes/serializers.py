@@ -8,6 +8,7 @@ from rest_framework import serializers
 from user.serializers import UserSerializer
 
 from .models import Note
+from .models import NoteComment
 from .models import NoteHistory
 from .utils import send_email
 
@@ -87,3 +88,15 @@ class NoteHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = NoteHistory
         fields = "__all__"
+
+
+class NoteCommentSerializer(serializers.ModelSerializer):
+    comment_by = UserSerializer(read_only=True)
+
+    class Meta:
+        model = NoteComment
+        fields = "__all__"
+
+    def validate(self, attrs):
+        attrs["comment_by"] = self.context["request"].user
+        return attrs

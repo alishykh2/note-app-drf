@@ -7,13 +7,16 @@ from django.shortcuts import get_object_or_404
 from rest_framework import filters
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Note
+from .models import NoteComment
 from .models import NoteHistory
 from .permissions import IsAuthor
+from .serializers import NoteCommentSerializer
 from .serializers import NoteHistorySerializer
 from .serializers import NoteSerializer
 
@@ -92,3 +95,20 @@ class RevertNoteViewSet(APIView):
             {"message": "Note updated successfully", "data": NoteSerializer(note).data},
             status=status.HTTP_200_OK,
         )
+
+
+class NoteCommentViewSet(viewsets.ModelViewSet):
+    queryset = NoteComment.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = NoteCommentSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["text", "id"]
+    pagination_class = PageNumberPagination
+    page_size = 10
+
+    def get_queryset(self):
+        note_id = self.request.query_params.get("note_id", "")
+        qs = Q()
+        if note_id:
+            qs = Q(note__id=note_id)
+        return NoteComment.objects.filter(qs)
