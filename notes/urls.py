@@ -12,6 +12,6 @@ router.register(r"note/(?P<note_id>\d+)/comment", NoteCommentViewSet)
 
 
 urlpatterns = [
-    path("note/history/<int:pk>", NoteHistoryViewSet.as_view(), name="share_note"),
+    path("note/<int:pk>/history", NoteHistoryViewSet.as_view(), name="share_note"),
 ]
 urlpatterns += router.urls

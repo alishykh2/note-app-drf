@@ -72,17 +72,22 @@ class NoteHistoryViewSet(APIView):
     permission_classes = [IsAuthenticated, IsAuthor | IsSharedWith]
 
     def get(self, request, pk, format=None):
-        note = NoteHistory.objects.filter(note__id=pk).order_by("-created_at")
+        note_history = (
+            NoteHistory.objects.filter(note__id=pk)
+            .order_by("-created_at")
+            .select_related("updated_by")
+        )
         return Response(
-            NoteHistorySerializer(note, many=True).data,
+            NoteHistorySerializer(note_history, many=True).data,
             status=status.HTTP_200_OK,
         )
 
-    def post(self, request, pk, format=None):
+    def post(self, request, pk):
         note = get_object_or_404(Note, pk=pk)
         note_history = (
             NoteHistory.objects.filter(note__id=pk).order_by("created_at").first()
         )
+
         if note_history:
             note.title = note_history.title
             note.save()
@@ -93,7 +98,9 @@ class NoteHistoryViewSet(APIView):
             )
 
         return Response(
-            {"message": "Note updated successfully", "data": NoteSerializer(note).data},
+            {
+                "message": "Note updated successfully",
+            },
             status=status.HTTP_200_OK,
         )
 

@@ -114,7 +114,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 class NoteHistorySerializer(serializers.ModelSerializer):
     updated_by = UserSerializer(read_only=True)
-    note = NoteSerializer(read_only=True)  # is this necessary?
+    # note = NoteSerializer(read_only=True)  # is this necessary?
 
     class Meta:
         model = NoteHistory
@@ -123,7 +123,6 @@ class NoteHistorySerializer(serializers.ModelSerializer):
 
 class NoteCommentSerializer(serializers.ModelSerializer):
     comment_by = UserSerializer(read_only=True)
-    # comment_by = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = NoteComment
