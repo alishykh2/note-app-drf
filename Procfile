@@ -1,1 +1,1 @@
-web: gunicorn notesApp.wsgi --log-file -
+web:  python manage.py migrate && gunicorn notesApp.wsgi --log-file -
