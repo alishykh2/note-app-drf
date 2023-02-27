@@ -15,7 +15,9 @@ class Note(models.Model):
 
 class NoteHistory(models.Model):
     title = models.CharField(max_length=500)
-    note = models.ForeignKey(Note, related_name="note", on_delete=models.CASCADE)
+    note = models.ForeignKey(
+        Note, related_name="version_history", on_delete=models.CASCADE,
+    )
     updated_by = models.ForeignKey(
         User,
         related_name="updated_by",
@@ -27,7 +29,7 @@ class NoteHistory(models.Model):
 
 class NoteComment(models.Model):
     text = models.CharField(max_length=500)
-    note = models.ForeignKey(Note, on_delete=models.CASCADE)
+    note = models.ForeignKey(Note, related_name="comments", on_delete=models.CASCADE)
     comment_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)

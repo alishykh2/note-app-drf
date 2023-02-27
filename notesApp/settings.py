@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "user",
     "notes",
     "django_filters",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -122,6 +123,29 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
+
+LOGGING = {
+    "version": 1,
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
+        },
+    },
+    # "loggers": {
+    #     "django.db.backends": {
+    #         "level": "DEBUG",
+    #         "handlers": ["console"],
+    #     }
+    # },
+}
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=15),
