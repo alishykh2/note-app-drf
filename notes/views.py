@@ -70,6 +70,7 @@ class NoteViewSet(viewsets.ModelViewSet):
 
 class NoteHistoryViewSet(APIView):
     permission_classes = [IsAuthenticated, IsAuthor | IsSharedWith]
+    pagination_class = PageNumberPagination
 
     def get(self, request, pk, format=None):
         note_history = (
@@ -77,8 +78,13 @@ class NoteHistoryViewSet(APIView):
             .order_by("-created_at")
             .select_related("updated_by")
         )
+        paginator = PageNumberPagination()
+        paginatedData = paginator.paginate_queryset(note_history, request)
         return Response(
-            NoteHistorySerializer(note_history, many=True).data,
+            {
+                "data": NoteHistorySerializer(paginatedData, many=True).data,
+                "count": len(note_history),
+            },
             status=status.HTTP_200_OK,
         )
 
